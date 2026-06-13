@@ -34,13 +34,13 @@ k1   <- read.csv("Qiita_ID_11808/class_K.csv", header = FALSE)
 ra1 <- dat1 / rowSums(dat1)
 ```
 
-## Extract 10 DUET-Knockoffs Selected Taxa
+## Extract 10 DUET Selected Taxa
 
 ```{r extract-selected-taxa}
 # New detected-taxa format: one column per method, rows = taxa names (or empty)
 da_1 <- read_xlsx("ORIGINS_detected_taxa.xlsx")
 
-selected_taxa <- as.character(da_1$`DUET-Knockoffs`)
+selected_taxa <- as.character(da_1$`DUETknockoff`)
 selected_taxa <- selected_taxa[!is.na(selected_taxa) &
                                  nzchar(selected_taxa) &
                                  selected_taxa != "NA"]
@@ -93,7 +93,7 @@ ggplot(df_long, aes(x = Group, y = RA_plot, fill = Group)) +
   labs(
     x = NULL,
     y = "Relative Abundance (log10 scale)",
-    title = "Abundance Profiling of 10 DUET-Knockoffs Selected Taxa in ORIGINS oral dataset"
+    title = "Abundance Profiling of 10 DUET Selected Taxa in ORIGINS oral dataset"
   ) +
   guides(
     fill = guide_legend(order = 1),

@@ -6,7 +6,7 @@ library(parallel)
 library(MASS)
 library(gtools)
 library(dirmult)
-library(DUETKnockoffs)
+library(DUET)
 library(LOCOM)
 library(readxl)
 library(openxlsx)
@@ -243,7 +243,7 @@ simulate_one_param <- function(c_val, beta_val, nsam_val, fdr_target, disp_val, 
   
   ## Safety check
   if (length(otus.keep.pool) == 0 || ncol(otu.table.sim.pool.filter) == 0) {
-    fdr_vec   <- c(`DUET-Knockoffs`=NA, Com2seq=NA, Locom_Com_P=NA, Locom_Com_Count=NA,
+    fdr_vec   <- c(`DUET`=NA, Com2seq=NA, Locom_Com_P=NA, Locom_Com_Count=NA,
                    Locom_16s=NA, Locom_shotgun=NA)
     power_vec <- fdr_vec
     return(list(fdr = fdr_vec, power = power_vec))
@@ -282,14 +282,14 @@ simulate_one_param <- function(c_val, beta_val, nsam_val, fdr_target, disp_val, 
   
   beta_int <- as.integer(beta_val)
   
-  ## DUETKnockoffs
-  res.DUETKnockoffs <- DUET_Knockoffs(
+  ## DUET
+  res.DUET <- DUET(
     W = W, class_K = class_K, data_x = data_x, M = M, y = y, T_var = T_var,
     fdr = fdr_target, test_statistic = "DE", filter_statistics = 3, test1 = "wilcox.test",
     offset = 1
   )
-  duetknockoffs.fdr <- unname(res.DUETKnockoffs$res[2])
-  duetknockoffs.power <- unname(res.DUETKnockoffs$res[3])
+  duetknockoffs.fdr <- unname(res.DUET$res[2])
+  duetknockoffs.power <- unname(res.DUET$res[3])
   
   ## Com2seq
   Y1 <- matrix(as.integer(Y==1), ncol=1)
@@ -363,11 +363,11 @@ simulate_one_param <- function(c_val, beta_val, nsam_val, fdr_target, disp_val, 
   otu.locom.1 <- summarize_otu_results(res.locom1$q.otu, causal.otus, noncausal.otus)
   otu.locom.2 <- summarize_otu_results(res.locom2$q.otu, causal.otus, noncausal.otus)
   
-  fdr_vec <- c(`DUET-Knockoffs`=duetknockoffs.fdr, Com2seq=otu.new.omni$fdr,
+  fdr_vec <- c(`DUET`=duetknockoffs.fdr, Com2seq=otu.new.omni$fdr,
                Locom_Com_P=otu.comp.locom$fdr, Locom_Com_Count=otu.pool.locom$fdr,
                Locom_16s=otu.locom.1$fdr, Locom_shotgun=otu.locom.2$fdr)
   
-  power_vec <- c(`DUET-Knockoffs`=duetknockoffs.power, Com2seq=otu.new.omni$sen,
+  power_vec <- c(`DUET`=duetknockoffs.power, Com2seq=otu.new.omni$sen,
                  Locom_Com_P=otu.comp.locom$sen, Locom_Com_Count=otu.pool.locom$sen,
                  Locom_16s=otu.locom.1$sen, Locom_shotgun=otu.locom.2$sen)
   
@@ -379,7 +379,7 @@ simulate_one_param <- function(c_val, beta_val, nsam_val, fdr_target, disp_val, 
 ## CRN Monte Carlo over grid
 ## -----------------------------
 
-methods <- c("DUET-Knockoffs", "Com2seq", "Locom_Com_P", "Locom_Com_Count", "Locom_16s", "Locom_shotgun")
+methods <- c("DUET", "Com2seq", "Locom_Com_P", "Locom_Com_Count", "Locom_16s", "Locom_shotgun")
 
 Kc <- length(c_grid)
 Kp <- length(prop.diff_grid)
@@ -430,7 +430,7 @@ stopifnot(length(unique(tasks$seed)) == nrow(tasks))
 n_cores_outer <- min(180, parallel::detectCores() - 1L)
 
 suppressPackageStartupMessages({
-  try(library(DUETKnockoffs), silent = TRUE)
+  try(library(DUET), silent = TRUE)
   try(library(LOCOM), silent = TRUE)
   try(library(dirmult), silent = TRUE)
 })

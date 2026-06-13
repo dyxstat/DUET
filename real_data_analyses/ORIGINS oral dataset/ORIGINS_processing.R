@@ -2,7 +2,7 @@
 # ORIGINS: investigate the association between periodontal controls and prediabetes prevalence
 #########################################################################################################
 # install.packages("devtools")
-devtools::install_github("dyxstat/DUET-Knockoffs")
+devtools::install_github("dyxstat/DUET")
 
 library(vtable)
 library(vegan)

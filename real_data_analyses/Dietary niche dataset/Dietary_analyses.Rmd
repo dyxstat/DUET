@@ -34,13 +34,13 @@ k2   <- read.csv("Qiita_ID_11212/class_K.csv", header = FALSE)
 ra2 <- dat2 / rowSums(dat2)
 ```
 
-## Extract Diet DUET-Knockoffs Selected Taxa
+## Extract Diet DUET Selected Taxa
 
 ```{r extract-diet-selected-taxa}
 # New detected-taxa format: one column per method, rows = taxa names (or empty)
 da_2 <- read_xlsx("Dietary_detected_taxa.xlsx")
 
-da_2_feature <- as.character(da_2$`DUET-Knockoffs`)
+da_2_feature <- as.character(da_2$`DUET`)
 da_2_feature <- da_2_feature[!is.na(da_2_feature) &
                                 nzchar(da_2_feature) &
                                 da_2_feature != "NA"]
@@ -235,7 +235,7 @@ ggsave("plot/Dietary_LFC_scatter.png",
 
 ```{r diet-summary}
 cat("\n=== Diet Analysis 1 Summary ===\n")
-cat("Total DUET-Knockoffs selected taxa:", length(da_2_feature), "\n")
+cat("Total DUET selected taxa:", length(da_2_feature), "\n")
 cat("Top 10 DA taxa (by variance):\n")
 print(top_10_da_2)
 

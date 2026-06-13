@@ -1,6 +1,6 @@
 #############################################################
 # ORIGINS (Oral) — Single-run detected taxa
-# Methods: DUETKnockoffs, Com2seq,
+# Methods: DUET, Com2seq,
 #          Locom_Com_P, Locom_Com_Count, Locom_16s, Locom_shotgun
 #############################################################
 
@@ -10,7 +10,7 @@ if (requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::isAvailable())
 }
 
 library(LOCOM)
-library(DUETKnockoffs)
+library(DUET)
 
 seed <- 2026
 fdr_target <- 0.1
@@ -140,23 +140,23 @@ Q_Pool_Locom  <- if (length(DA_Pool_Locom) > 0) {
   as.numeric(res.locom.pool$q.otu[, DA_Pool_Locom])
 } else numeric(0)
 
-# ==== DUET-Knockoffs ==== #
-res.DUETKnockoffs <- DUET_Knockoffs(
+# ==== DUET ==== #
+res.DUET <- DUET(
   W = W, M = M, class_K = class_K, data_x = data_x,
   fdr = fdr_target, y = y, T_var = NULL,
   test_statistic = "DE", filter_statistics = 1
 )
-knockoff_idx <- res.DUETKnockoffs$S
+knockoff_idx <- res.DUET$S
 DA_knockoff  <- colnames(W)[knockoff_idx]
 W_knockoff   <- if (length(knockoff_idx) > 0) {
-  res.DUETKnockoffs$filter_stat[knockoff_idx]
+  res.DUET$filter_stat[knockoff_idx]
 } else numeric(0)
 
-cat("DUET-Knockoffs DA taxa:", length(DA_knockoff), "\n")
+cat("DUET DA taxa:", length(DA_knockoff), "\n")
 
 # ==== Summary Output ==== #
 Taxa_list <- list(
-  `DUET-Knockoffs`    = DA_knockoff,
+  `DUET`    = DA_knockoff,
   Com2seq         = DA_Com2seq,
   Locom_Com_P     = DA_Cauchy_Locom,
   Locom_Com_Count = DA_Pool_Locom,
@@ -165,7 +165,7 @@ Taxa_list <- list(
 )
 
 Q_value_list <- list(
-  `DUET-Knockoffs`    = W_knockoff,
+  `DUET`    = W_knockoff,
   Com2seq         = Q_Com2seq,
   Locom_Com_P     = Q_Cauchy_Locom,
   Locom_Com_Count = Q_Pool_Locom,
@@ -184,7 +184,7 @@ cat(sprintf(
 # ==== Export detected taxa names to Excel ==== #
 library(writexl)
 
-method_order <- c("DUET-Knockoffs", "Com2seq",
+method_order <- c("DUET", "Com2seq",
                   "Locom_Com_P", "Locom_Com_Count",
                   "Locom_16s", "Locom_shotgun")
 
