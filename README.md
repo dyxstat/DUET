@@ -1,24 +1,24 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# DUET-Knockoffs
+# DUET
 
 ## Overview
 
-DUET-Knockoffs is a knockoff-based framework for integrative feature
-selection from paired 16S and shotgun microbiome count data. For each
-taxon, it tests a union null hypothesis that the taxon is not
-conditionally associated with the outcome in at least one platform.
-Within each platform, taxon counts are modeled using zero-inflated
-negative binomial (ZINB) distributions coupled with a Gaussian copula to
-generate knockoff statistics. Platform-specific knockoff contrasts are
-then combined via the simultaneous knockoff filter to obtain a single
-statistic per taxon, yielding finite-sample false discovery rate (FDR)
-control for cross-platform consistent signals.
+DUET is a knockoff-based framework for integrative feature selection
+from paired 16S and shotgun microbiome count data. For each taxon, it
+tests a union null hypothesis that the taxon is not conditionally
+associated with the outcome in at least one platform. Within each
+platform, taxon counts are modeled using zero-inflated negative binomial
+(ZINB) distributions coupled with a Gaussian copula to generate knockoff
+statistics. Platform-specific knockoff contrasts are then combined via
+the simultaneous knockoff filter to obtain a single statistic per taxon,
+yielding finite-sample false discovery rate (FDR) control for
+cross-platform consistent signals.
 
 <p align="center">
 
-<img src="figures/Overview.png" alt="DUET-Knockoffs workflow" width="100%"/>
+<img src="figures/Overview.png" alt="DUET workflow" width="100%"/>
 
 </p>
 
@@ -28,15 +28,15 @@ control for cross-platform consistent signals.
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("dyxstat/DUET-Knockoffs")
+devtools::install_github("dyxstat/DUET")
 ```
 
 ## Example
 
-An example of using the DUET_Knockoffs function
+An example of using the DUET function
 
 ``` r
-library(DUETKnockoffs)
+library(DUET)
 
 set.seed(2024)
 
@@ -46,8 +46,8 @@ data("y")        # control / case group
 data("data_x")   # host covariates
 data("class_K")  # sequencing platforms
 
-# Run DUET_Knockoffs using differential expression–based test statistic
-res.DUET_Knockoffs <- DUET_Knockoffs(
+# Run DUET using differential expression–based test statistic
+res.DUET <- DUET(
   W = W,
   M = M,
   class_K = class_K,
@@ -60,7 +60,7 @@ res.DUET_Knockoffs <- DUET_Knockoffs(
 )
 
 # Detected genera set
-genera_idx <- res.DUET_Knockoffs$S
+genera_idx <- res.DUET$S
 genera_set <- colnames(W)[genera_idx]
 genera_set
 
@@ -69,7 +69,7 @@ genera_set
 # [11] "g__Campylobacter"   "g__Oribacterium"    "g__Actinobacillus"  "g__Atopobium"       "g__Mogibacterium"  
 # [16] "g__Selenomonas"  
 
-filter_stats <- res.DUET_Knockoffs$filter_stat[genera_idx]
+filter_stats <- res.DUET$filter_stat[genera_idx]
 names(filter_stats) <- genera_set
 filter_stats
 

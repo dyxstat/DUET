@@ -21,7 +21,7 @@
 #' @export
 #'
 #' @examples
-#' library(DUETKnockoffs)
+#' library(DUET)
 #'
 #' set.seed(42)
 #'
@@ -38,14 +38,14 @@
 #' class_K <- factor(rep(1:n_data, each = n_sam))
 #' y <- rep(c(rep(1, n_sam/2), rep(2, n_sam/2)), times = n_data)
 #'
-#' res.DUET_Knockoffs <- suppressWarnings(
-#'   DUET_Knockoffs(W = W, M = M, class_K = class_K, y=y, data_x=NULL,
+#' res.DUET <- suppressWarnings(
+#'   DUET(W = W, M = M, class_K = class_K, y=y, data_x=NULL,
 #'                T_var = NULL, test_statistic = "DE",
 #'                filter_statistics=3, offset=1)
 #'   )
-#' res.DUET_Knockoffs$test_stat[1:10]
-#' res.DUET_Knockoffs$filter_stat[1:10]
-DUET_Knockoffs <- function(W = W, class_K = NULL, data_x = NULL, M = NULL, y = y, T_var = NULL, fdr = 0.2, offset = 1,
+#' res.DUET$test_stat[1:10]
+#' res.DUET$filter_stat[1:10]
+DUET <- function(W = W, class_K = NULL, data_x = NULL, M = NULL, y = y, T_var = NULL, fdr = 0.2, offset = 1,
                           test_statistic = "DE", filter_statistics = 3, test1 = "wilcox.test") {
   if (is.null(class_K)) {
     class_K <- rep(1, dim(W)[1])
